@@ -1,0 +1,14 @@
+{
+  "name": "accountblockernodeapi",
+  "version": "1.0.0",
+  "description": "account blocker node api",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sedat kocaer",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
