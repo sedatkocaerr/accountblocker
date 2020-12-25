@@ -15,7 +15,7 @@ const userSchema = new Schema({
     email:{
         type:String,
         required:[true,'E- Mail is required'],
-        unique: true,
+        
     },
     password:String,
     createdDate:{

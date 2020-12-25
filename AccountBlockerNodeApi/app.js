@@ -5,12 +5,14 @@ const dotenv = require('dotenv').config();
 const mongoose = require('./helpers/mongodbConnectHelper')();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 const userRouter = require('./routes/user');
 
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

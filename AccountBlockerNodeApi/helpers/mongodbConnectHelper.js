@@ -13,9 +13,5 @@ module.exports =()=>{
         console.log("mongoose hatalı =>",err);
     });
 
-    mongoose.set('useNewUrlParser', true);
-    mongoose.set('useFindAndModify', false);
-    mongoose.set('useCreateIndex', true);
-
     mongoose.Promise=global.Promise;
 };

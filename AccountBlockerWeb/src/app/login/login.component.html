@@ -1,0 +1,23 @@
+<div class="sidenav">
+  <div class="login-main-text">
+     <h2>Account Blocker<br> Login Page</h2>
+  </div>
+</div>
+<div class="main">
+  <div class="col-md-6 col-sm-12">
+     <div class="login-form">
+      <app-alert></app-alert>
+           <div class="form-group">
+              <label>E-mail</label>
+              <input  type="text" [(ngModel)]="email" id="email"  class="form-control" placeholder="E-mail">
+           </div>
+           <div class="form-group">
+              <label>Password</label>
+              <input type="password" [(ngModel)]="password" id="password"  class="form-control" placeholder="Password">
+           </div>
+           <button type="submit" (click)="onSubnitLogin()" class="btn btn-black">Login</button>
+           <span>&nbsp; Or &nbsp;</span>
+           <button type="submit" class="btn btn-secondary">Register</button>
+     </div>
+  </div>
+</div>
