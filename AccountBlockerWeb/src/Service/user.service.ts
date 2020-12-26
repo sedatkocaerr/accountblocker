@@ -11,18 +11,29 @@ export class UserService {
 
 constructor(private httpClient:HttpClient) { }
 
-
 apiUrl:string = "http://localhost:3000";
 
-public login(userName: string, password: string): Observable<User> {
+
+public login(email: string, password: string): Observable<User> {
   let httpOptions = {
       headers: new HttpHeaders({
           'Content-Type': 'application/json'
   })}
-  console.log(this.apiUrl);
 
   return this.httpClient.post<User>(this.apiUrl+"/user/login",
-     { username: userName, password: password }, httpOptions)
+     { email: email, password: password }, httpOptions)
+      .pipe(
+      retry(1))
+ }
+
+ public register(user: User): Observable<User> {
+  let httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+  })}
+
+  return this.httpClient.post<User>(this.apiUrl+"/user/register",
+   user, httpOptions)
       .pipe(
       retry(1))
  }

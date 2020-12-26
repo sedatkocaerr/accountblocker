@@ -23,6 +23,7 @@ router.post('/register',  (req, res, next) => {
         
         userPromise.then((data)=>{
           res.status(201).json({
+            message:"User created.",
             status:true
            })
           }).catch((err)=>{
@@ -38,6 +39,7 @@ router.post('/register',  (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     
   const {email , password} = req.body;
+  
   const userEmailPromise = User.findOne({email});
   userEmailPromise.then((data)=>{
     if(data)
@@ -49,14 +51,19 @@ router.post('/login', async (req, res, next) => {
             expiresIn:720
         });
 
+        const user = {userId:data.userId,
+          name:data.name,
+          email:data.email};
+
         res.status(201).json({
+          data:user,
           token:token,
           status:true,
          });
       }
       else
       {
-        res.status(401).json({error:{message:"Password not true"}});
+        res.status(401).json({error:{message:"Password not true."}});
       }
     }
     else
@@ -85,5 +92,26 @@ router.get('/getUser/:user_id',tokenMiddleware, (req, res, next) => {
       res.json(err);
     });
 });
+
+
+// get email and password req.body before give the token and refresh token
+router.get('/getUserList',tokenMiddleware, (req, res, next) => {
+  const userList =[];  
+  const userPromise = User.find({});
+
+  userPromise.then((data)=>{
+    data.forEach(data =>{
+      userList.push({name:data.name,surname:data.surname,email:data.email});
+    });
+      res.status(200).json({
+        status:true,
+        message:"User Listed.",
+        data:userList});
+
+    }).catch((err)=>{
+      res.json({error:{message:"something went wrong."}});
+    });
+});
+
 
 module.exports=router; 

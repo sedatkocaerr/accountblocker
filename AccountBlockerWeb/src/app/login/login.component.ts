@@ -1,34 +1,69 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/Service/user.service';
 import { AlertService } from 'src/Service/alert.service';
+import { AuthenticationService } from 'src/Service/Authentication.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {Subscription} from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
-  email:string;
-  password:string;
+  loginForm: FormGroup;
+  loading = false;
+  submitted = false;
+  subscription: Subscription;
 
-  constructor(private userService:UserService , private alertService:AlertService) { }
+  constructor(private userService:UserService,
+     private alertService:AlertService,
+     private formBuilder: FormBuilder,
+     private router: Router,
+     private authenticationService:AuthenticationService) {}
 
   ngOnInit() {
-    // chechk token controll
+    this.createLoginForm();
   }
 
+  get formValidation() { return this.loginForm.controls; }
 
-  onSubnitLogin()
+  onSubmitLogin()
   {
-    this.userService.login(this.email,this.password) .subscribe(
-      data => {
-         console.log(data);
+    this.submitted=true;
+    this.alertService.clear();
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.userService.login(this.formValidation.email.value,this.formValidation.password.value) .subscribe(
+      (data:any) => {
+        if(data.status)
+        {
+          window.localStorage.setItem("token", data.token);
+          window.localStorage.setItem("createdDate", new Date().toString());
+          this.authenticationService.login(data.data);
+          this.router.navigate(['']);
+        }
+        else
+        {
+          this.alertService.error(data.error.message);
+        }
+         
       },
       error => {
-           this.alertService.error(error.error.error.message);
-          // this.loading = false;
-      });
+      this.alertService.error(error.error.error.message);
+    });
   }
 
+  createLoginForm()
+  {
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
 }

@@ -5,28 +5,47 @@
 </div>
 <div class="main">
   <div class="col-md-6 col-sm-12">
+   <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
      <div class="login-form">
-        <form>
+      <app-alert></app-alert>
+      <div *ngIf="successRegister">
+         <p>After {{counter}} seconds you will be redirected</p>
+      </div>
            <div class="form-group">
               <label>Name</label>
-              <input type="text" class="form-control" placeholder="Name">
+              <input type="text" formControlName="name" id="name" class="form-control" placeholder="Name">
            </div>
+           <div *ngIf="submitted && formValidation.name.errors" class="alert alert-danger">
+              <div *ngIf="formValidation.name.errors.required">Name is required</div>
+           </div>
+
            <div class="form-group">
               <label>Surname</label>
-              <input type="text" class="form-control" placeholder="Surname">
+              <input type="text" formControlName="surname" id="surname" class="form-control" placeholder="Surname">
            </div>
+           <div *ngIf="submitted && formValidation.surname.errors" class="alert alert-danger">
+               <div *ngIf="formValidation.surname.errors.required">Surname is required</div>
+           </div>
+
            <div class="form-group">
               <label>E-mail</label>
-              <input type="text" class="form-control" placeholder="E-mail">
+              <input type="text" formControlName="email" id="email" class="form-control" placeholder="E-mail">
            </div>
+           <div *ngIf="submitted && formValidation.email.errors" class="alert alert-danger">
+               <div *ngIf="formValidation.email.errors.required">Email is required</div>
+           </div>
+
            <div class="form-group">
               <label>Password</label>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" formControlName="password" id="password" class="form-control" placeholder="Password">
+           </div>
+           <div *ngIf="submitted && formValidation.password.errors" class="alert alert-danger">
+               <div *ngIf="formValidation.password.errors.required">Password is required</div>
            </div>
            <button type="submit" class="btn btn-black">Register</button>
            <span>&nbsp; Or &nbsp;</span>
-           <button type="submit" class="btn btn-secondary">Login</button>
-        </form>
+           <a routerLink="/login" class="btn btn-secondary">Login</a>
      </div>
+   </form>
   </div>
 </div>
