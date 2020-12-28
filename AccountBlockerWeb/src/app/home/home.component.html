@@ -1,3 +1,87 @@
-<p>
-  home works!{{currentUser.name}}
-</p>
+<div id="wrapper" class="animate">
+  <nav class="navbar header-top fixed-top navbar-expand-lg  navbar-dark bg-dark">
+    <span class="navbar-toggler-icon leftmenutrigger"></span>
+    <a class="navbar-brand" href="#">&nbsp; ACCOUNT BLOCKER</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav ml-md-auto d-md-flex">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Home
+            <span class="sr-only">(current)</span>
+            <i class="fa fa-home" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">{{currentUser.name}} {{currentUser.surname}} <i class="fa fa-user" aria-hidden="true"></i></a>
+        </li>
+        <li class="nav-item">
+          <a (click)="logout()" class="nav-link" >logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div style="margin-top: 100px;" class="row">
+    <div class="col">
+      <div class="card">
+        <div style="background-color: #D1D7E1;" class="card-body">
+          <h5 class="card-title">You are connected now.</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Connection time : </h6>
+          <h6 class="card-subtitle mb-2 text-muted">Maximum connection limit : 3</h6>
+          <h6 class="card-subtitle mb-2 text-muted">Your currently connected accounts : 3</h6>
+          <div class="list-group">
+            <a style="width: 50%;" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+            <a style="width: 50%;" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 50px; padding-right:0px; padding-left:0px;" class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div style="background-color: #D1D7E1;" class="card-body">
+            <h5 class="card-title">Registered User List</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Surname</th>
+                  <th scope="col">E-Mail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of userList; let i = index" [ngClass]="{'active-user': currentUser.email === item.email}">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{item.name}}</td>
+                  <td>{{item.surname}}</td>
+                  <td>{{item.email}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

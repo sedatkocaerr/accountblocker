@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/Service/Authentication.service';
 import { User } from 'src/Model/user';
+import { Router } from '@angular/router';
+import { UserService } from 'src/Service/user.service';
+import { SocketService } from 'src/Service/socket.service';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +13,30 @@ import { User } from 'src/Model/user';
 export class HomeComponent implements OnInit {
 
   currentUser: User;
-
-  constructor(private authenticationService:AuthenticationService) { }
+  userList:User[];
+  constructor(
+    private authenticationService:AuthenticationService,
+    private userService:UserService,
+    private router: Router,
+    private socketService:SocketService) { }
 
   ngOnInit() {
     this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);
+    this.getUserlist();
+  }
+
+  getUserlist()
+  {
+    this.userService.getAllUsers().subscribe((data:any)=>{
+      console.log(data.data);
+        this.userList=data.data;
+    });
+  }
+
+  logout()
+  {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
   }
 
 }

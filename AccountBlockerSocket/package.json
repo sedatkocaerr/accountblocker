@@ -9,7 +9,9 @@
   "author": "sedat kocaer",
   "license": "ISC",
   "dependencies": {
+    "@types/socket.io": "^2.1.12",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "socket.io": "^3.0.4"
+    "socket.io": "^2.3.0"
   }
 }

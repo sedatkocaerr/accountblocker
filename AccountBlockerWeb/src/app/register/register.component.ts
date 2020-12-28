@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/Service/user.service';
 import { AlertService } from 'src/Service/alert.service';
 import { User } from 'src/Model/user';
-
+import { AuthenticationService } from 'src/Service/Authentication.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -22,10 +22,16 @@ export class RegisterComponent implements OnInit {
   constructor(private userService:UserService,
     private alertService:AlertService,
     private router: Router,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private authenticationService:AuthenticationService) { }
 
   ngOnInit() {
-   this.createRegisterForm();
+    if(this.authenticationService.currentUser)
+    {
+      this.router.navigate(['/']);
+    }
+
+    this.createRegisterForm();
   }
 
   get formValidation() { return this.registerForm.controls; }

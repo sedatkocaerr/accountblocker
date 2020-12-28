@@ -53,6 +53,7 @@ router.post('/login', async (req, res, next) => {
 
         const user = {userId:data.userId,
           name:data.name,
+          surname:data.surname,
           email:data.email};
 
         res.status(201).json({
@@ -95,7 +96,7 @@ router.get('/getUser/:user_id',tokenMiddleware, (req, res, next) => {
 
 
 // get email and password req.body before give the token and refresh token
-router.get('/getUserList',tokenMiddleware, (req, res, next) => {
+router.get('/getUserList', (req, res, next) => {
   const userList =[];  
   const userPromise = User.find({});
 

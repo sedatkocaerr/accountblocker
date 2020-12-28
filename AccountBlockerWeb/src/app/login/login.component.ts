@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/Service/Authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Subscription} from 'rxjs';
 import { Router } from '@angular/router';
+import { User } from 'src/Model/user';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   subscription: Subscription;
+  currentUser: User;
 
   constructor(private userService:UserService,
      private alertService:AlertService,
@@ -25,6 +27,11 @@ export class LoginComponent implements OnInit {
      private authenticationService:AuthenticationService) {}
 
   ngOnInit() {
+    if(this.authenticationService.currentUserValue)
+    {
+      console.log("değer geliyor");
+      this.router.navigate(['/']);
+    }
     this.createLoginForm();
   }
 
@@ -46,7 +53,7 @@ export class LoginComponent implements OnInit {
           window.localStorage.setItem("token", data.token);
           window.localStorage.setItem("createdDate", new Date().toString());
           this.authenticationService.login(data.data);
-          this.router.navigate(['']);
+          this.router.navigate(['/']);
         }
         else
         {

@@ -15,33 +15,45 @@ apiUrl:string = "http://localhost:3000";
 
 
 public login(email: string, password: string): Observable<User> {
-  let httpOptions = {
-      headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-  })}
+    let httpOptions = {
+        headers: new HttpHeaders({
+            'Content-Type': 'application/json'
+    })}
 
-  return this.httpClient.post<User>(this.apiUrl+"/user/login",
-     { email: email, password: password }, httpOptions)
-      .pipe(
-      retry(1))
+    return this.httpClient.post<User>(this.apiUrl+"/user/login",
+      { email: email, password: password }, httpOptions)
+        .pipe(
+        retry(1));
  }
 
- public register(user: User): Observable<User> {
-  let httpOptions = {
-    headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-  })}
 
-  return this.httpClient.post<User>(this.apiUrl+"/user/register",
-   user, httpOptions)
-      .pipe(
-      retry(1))
+ public register(user: User): Observable<User> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+    })}
+
+    return this.httpClient.post<User>(this.apiUrl+"/user/register",
+    user, httpOptions)
+        .pipe(
+        retry(1));
+ }
+
+
+ public getAllUsers(): Observable<User[]> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+    })}
+
+    return this.httpClient.get<User[]>(this.apiUrl+"/user/getUserList",
+      httpOptions)
+        .pipe(
+        retry(1));
  }
 
  errorHandle(error)
  {
-   console.log("handle geldi");
-   console.log(error);
   return throwError(error);
  }
 

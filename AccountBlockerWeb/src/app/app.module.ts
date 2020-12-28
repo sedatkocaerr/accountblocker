@@ -12,6 +12,8 @@ import { AlertComponent } from './alert/alert.component';
 import { AlertService } from 'src/Service/alert.service';
 import { HomeComponent } from './home/home.component';
 
+// import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+// const config: SocketIoConfig = { url: 'http://localhost:3000',options:{} };
 @NgModule({
   declarations: [				
     AlertComponent,	
