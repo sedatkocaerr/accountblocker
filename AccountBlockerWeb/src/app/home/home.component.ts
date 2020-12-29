@@ -3,7 +3,6 @@ import { AuthenticationService } from 'src/Service/Authentication.service';
 import { User } from 'src/Model/user';
 import { Router } from '@angular/router';
 import { UserService } from 'src/Service/user.service';
-import { SocketService } from 'src/Service/socket.service';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +16,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private authenticationService:AuthenticationService,
     private userService:UserService,
-    private router: Router,
-    private socketService:SocketService) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);

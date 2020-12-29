@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
+import { User } from 'src/Model/User';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,14 @@ export class SocketService {
     this.socket = io(this.socketUrl);
   }
   public ngOnInit(): void {
-    this.socket.on('notification', data => {
-      this.data = data;
-    });
+    
   }
+
+  public addNewOnlineUser(user:User):void {
+    this.socket.emit('addNewUser', user);
+    //  this.socket.on('addNewUser', data => {
+    //    this.data = data;
+    //  });
+  }
+
 }

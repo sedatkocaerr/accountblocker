@@ -4,7 +4,6 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const tokenMiddleware = require('../middleware/tokenVerify');
-
 router.post('/register',  (req, res, next) => {
     
   const user = new User(req.body);
@@ -51,7 +50,7 @@ router.post('/login', async (req, res, next) => {
             expiresIn:720
         });
 
-        const user = {userId:data.userId,
+        const user = {userId:data._id,
           name:data.name,
           surname:data.surname,
           email:data.email};

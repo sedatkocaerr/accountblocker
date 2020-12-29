@@ -1,0 +1,62 @@
+const redisClient = require('./redisHelper');
+
+function setData(keyName,userId,data)
+{
+    if(redisClient.connected)
+    {
+        const redisData = JSON.stringify(data);
+        console.log(redisData+"databurda2");
+        redisClient.hset(keyName, userId, redisData, (err, res) =>  {
+           if(err)
+           {
+               console.log(err.message);
+           }
+        });
+    }
+}
+
+function getListData(keyName)
+{
+    const rtrList = [];
+    if(redisClient.connected)
+    {
+        redisClient.get(keyName,(err,datalist)=>{
+           if(err)
+           {
+               console.log(err.message);
+               return null;
+           }
+           rtrList.push(JSON.parse(datalist));
+           return rtrList;
+        });
+      return rtrList;
+    }
+    return rtrList;
+}
+
+async function getData(keyName,userId)
+{
+    return new Promise((resolve,reject)=>{
+        try {
+            if(redisClient.connected)
+             {
+                redisClient.hget(keyName,userId,(err,datalist)=>{
+                if(err)
+                {
+                    console.log(err.message);
+                    return null;
+                }
+               const data = JSON.parse(datalist);
+               resolve (data);
+            });
+          }
+            
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+
+
+module.exports = {setData,getData,getListData};
