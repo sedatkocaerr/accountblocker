@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Subscription} from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from 'src/Model/user';
-import { SocketService } from 'src/Service/Socket.service';
 
 @Component({
   selector: 'app-login',
@@ -25,13 +24,11 @@ export class LoginComponent implements OnInit {
      private alertService:AlertService,
      private formBuilder: FormBuilder,
      private router: Router,
-     private authenticationService:AuthenticationService,
-     private socketService:SocketService) {}
+     private authenticationService:AuthenticationService) {}
 
   ngOnInit() {
     if(this.authenticationService.currentUserValue)
     {
-      console.log("değer geliyor");
       this.router.navigate(['/']);
     }
     this.createLoginForm();
@@ -54,9 +51,11 @@ export class LoginComponent implements OnInit {
         {
           window.localStorage.setItem("token", data.token);
           window.localStorage.setItem("createdDate", new Date().toString());
+          const authdata ={
+            ...data.data,
+            tokenKey:data.token
+          }
           this.authenticationService.login(data.data);
-          console.log(data.data.userId);
-          this.socketService.addNewOnlineUser(data.data);
           this.router.navigate(['/']);
         }
         else

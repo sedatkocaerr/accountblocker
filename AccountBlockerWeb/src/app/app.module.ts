@@ -13,14 +13,17 @@ import { AlertService } from 'src/Service/alert.service';
 import { HomeComponent } from './home/home.component';
 
 // import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { MultiUserAlertComponent } from './multiUserAlert/multiUserAlert.component';
+
 // const config: SocketIoConfig = { url: 'http://localhost:3000',options:{} };
 @NgModule({
-  declarations: [				
+  declarations: [								
     AlertComponent,	
     AppComponent,
     LoginComponent,
     RegisterComponent,
-      HomeComponent
+      HomeComponent,
+      MultiUserAlertComponent
    ],
   imports: [
     BrowserModule,

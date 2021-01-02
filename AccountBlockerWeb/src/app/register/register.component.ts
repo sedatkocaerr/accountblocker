@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
     private authenticationService:AuthenticationService) { }
 
   ngOnInit() {
-    if(this.authenticationService.currentUser)
+    if(this.authenticationService.currentUserValue)
     {
       this.router.navigate(['/']);
     }

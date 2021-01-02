@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { User } from 'src/Model/User';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
+import { SocketService } from './Socket.service';
 
 @Injectable({
   providedIn: 'root'

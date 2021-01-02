@@ -4,6 +4,20 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const tokenMiddleware = require('../middleware/tokenVerify');
+
+//Redis
+const redis = require('redis');
+const redisClient = redis.createClient(); //creates a new client
+
+
+redisClient.on('connect',  () => {
+    console.log('Redis client bağlandı');
+});
+
+redisClient.on('error',  (err) => {
+    console.log('Redis Clientda bir hata var ' + err);
+});
+
 router.post('/register',  (req, res, next) => {
     
   const user = new User(req.body);
@@ -55,6 +69,7 @@ router.post('/login', async (req, res, next) => {
           surname:data.surname,
           email:data.email};
 
+          console.log("token"+token);
         res.status(201).json({
           data:user,
           token:token,
@@ -112,6 +127,25 @@ router.get('/getUserList', (req, res, next) => {
       res.json({error:{message:"something went wrong."}});
     });
 });
+
+
+
+// get email and password req.body before give the token and refresh token
+// router.get('/getOnlineList/:user_id', (req, res, next) => {
+//   const userList =[];  
+//   redisClient.hget("onlineuser",req.params.user_id,(err,datalist)=>{
+//     if(err)
+//     {
+//       res.json({error:{message:"something went wrong."}});
+//     }
+//     const data = JSON.parse(datalist);
+//     console.log(data);
+//     res.status(200).json({
+//       status:true,
+//       message:"Online User Listed.",
+//       data:data});
+//   });
+// });
 
 
 module.exports=router; 

@@ -13,27 +13,95 @@ app.use(cors());
 server.listen(3001);
  
 io.on('connection', (socket) => {
-    console.log("a user connected");
-
+    
     socket.broadcast.on("addNewUser", async user => {
-        const redisUser = await redisService.getData("onlineuser",user.userId);
-        if(redisUser!=null)
+        
+        const redisUserList = await redisService.getData("onlineuser",user.Id);
+        if(redisUserList)
         {
-            redisUser.onlineCount+=1;
-            redisService.setData("onlineuser",user.userId,redisUser);
+            const userData = redisUserList.filter(x=>x.token ==user.token)[0];
+            if(userData)
+            {
+                userData.socketList.push(socket.id);
+                redisUserList[redisUserList.indexOf(userData)]=userData;
+                await redisService.setData("onlineuser",user.Id,redisUserList); 
+                io.emit('getUserList',redisUserList); 
+            }
+            else
+            {
+                const newUserWebTab = {
+                    ...user,
+                    socketList:[socket.id]
+                }
+    
+                redisUserList.push(newUserWebTab);
+                await redisService.setData("onlineuser",user.Id,redisUserList); 
+                io.emit('getUserList',redisUserList); 
+            }
+            
         }
         else
         {
-            const saveUser = {
+            const newUserList =[];
+            const newUserWebTab = {
                 ...user,
-                onlineCount:1
-            };
-            redisService.setData("onlineuser",user.userId,saveUser);
+                socketList:[socket.id]
+            }
+            newUserList.push(newUserWebTab);
+            await redisService.setData("onlineuser",user.Id,newUserList); 
+            io.emit('getUserList',newUserList);   
         }
+        
     });
 
 
+    socket.broadcast.on('removeUser', async user =>{
+        const redisUserList = await redisService.getData("onlineuser",user.Id);
+        
+        if(redisUserList.length==1)
+        {
+            const userData = redisUserList.filter(x=>x.token ==user.token)[0];
+            if(userData.socketList.length==1)
+            {
+                redisService.removeKeyField("onlineuser",user.Id);
+                console.log("içinde");
+            }
+            else
+            {
+                  const socketData = userData.socketList.filter(x=>x==socket.id)[0];
+                  userData.socketList.splice(userData.socketList.indexOf(socketData));
+    
+                  const redisIndex= redisUserList.indexOf(userData);
+                  redisUserList[redisIndex]=userData;
+                  await redisService.setData("onlineuser",user.Id,redisUserList); 
+                  io.emit('getUserList',redisUserList);
+            }
+        }
+        else
+        {
+            const userData = redisUserList.filter(x=>x.token ==user.token)[0];
+            if(userData)
+            {
+                if(userData.socketList.length==1)
+                {
+                    redisUserList.splice(redisUserList.indexOf(userData));
+                    io.emit('getUserList',redisUserList);
+                }
+                else
+                {
+                  const socketData = userData.socketList.filter(x=>x==socket.id)[0];
+                  userData.socketList.splice(userData.socketList.indexOf(socketData));
+    
+                  const redisIndex= redisUserList.indexOf(userData);
+                  redisUserList[redisIndex]=userData;
+                  await redisService.setData("onlineuser",user.Id,redisUserList); 
+                  io.emit('getUserList',redisUserList);
+                }
+            }
+        }
+    });
+    
     socket.on("disconnect", () =>  {
-        console.log(+"redisten geldim.");
+        console.log("socket");
     });
 });

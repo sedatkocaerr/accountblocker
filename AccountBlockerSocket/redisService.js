@@ -5,7 +5,7 @@ function setData(keyName,userId,data)
     if(redisClient.connected)
     {
         const redisData = JSON.stringify(data);
-        console.log(redisData+"databurda2");
+        
         redisClient.hset(keyName, userId, redisData, (err, res) =>  {
            if(err)
            {
@@ -57,6 +57,18 @@ async function getData(keyName,userId)
     })
 }
 
+function removeKeyField(keyName,fieldName)
+{
+    if(redisClient.connected)
+    {
+        redisClient.hdel(keyName, fieldName);
+    }
+    else
+    {
+        console.log("Redis not connect.")
+    }
+}
 
 
-module.exports = {setData,getData,getListData};
+
+module.exports = {setData,getData,getListData,removeKeyField};
