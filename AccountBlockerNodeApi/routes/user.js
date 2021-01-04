@@ -131,21 +131,32 @@ router.get('/getUserList', (req, res, next) => {
 
 
 // get email and password req.body before give the token and refresh token
-// router.get('/getOnlineList/:user_id', (req, res, next) => {
-//   const userList =[];  
-//   redisClient.hget("onlineuser",req.params.user_id,(err,datalist)=>{
-//     if(err)
-//     {
-//       res.json({error:{message:"something went wrong."}});
-//     }
-//     const data = JSON.parse(datalist);
-//     console.log(data);
-//     res.status(200).json({
-//       status:true,
-//       message:"Online User Listed.",
-//       data:data});
-//   });
-// });
+ router.get('/getOnlineList/:user_id', (req, res, next) => {
+   const userList =[];  
+   console.log("userId => ",req.params.user_id);
+   redisClient.hget("onlineuser",req.params.user_id,(err,datalist)=>{
+     if(err)
+     {
+       res.json({error:{message:"something went wrong."}});
+     }
+     const data = JSON.parse(datalist);
+     if(data)
+     {
+        res.status(200).json({
+        status:true,
+        message:"Online User Listed.",
+        dataCount:data.length});
+     }
+     else
+     {
+      res.status(200).json({
+        status:true,
+        message:"Online User Listed.",
+        dataCount:null});
+     }
+     
+   });
+ });
 
 
 module.exports=router; 

@@ -3,7 +3,7 @@ console.log(process.env.DB_CON_STR)
 module.exports =()=>{
 
     mongoose.connect(process.env.DB_CON_STR,
-        {useNewUrlParser: true});
+        {useNewUrlParser: true,useUnifiedTopology: true});
 
     mongoose.connection.on('open',()=>{
         console.log("mongoose ayakta");

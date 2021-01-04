@@ -31,4 +31,10 @@ export class SocketService {
     );
   }
 
+  public nonBlockUser():any{
+    return this.observable = new Observable((observer) => 
+      this.socket.on('multiplyPageBlock',(data) => observer.next(data))
+    );
+  }
+
 }

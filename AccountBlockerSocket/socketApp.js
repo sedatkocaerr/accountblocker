@@ -22,10 +22,7 @@ io.on('connection', (socket) => {
             const userData = redisUserList.filter(x=>x.token ==user.token)[0];
             if(userData)
             {
-                userData.socketList.push(socket.id);
-                redisUserList[redisUserList.indexOf(userData)]=userData;
-                await redisService.setData("onlineuser",user.Id,redisUserList); 
-                io.emit('getUserList',redisUserList); 
+                io.to(socket.id).emit('multiplyPageBlock');
             }
             else
             {
@@ -33,15 +30,14 @@ io.on('connection', (socket) => {
                     ...user,
                     socketList:[socket.id]
                 }
-    
                 redisUserList.push(newUserWebTab);
                 await redisService.setData("onlineuser",user.Id,redisUserList); 
                 io.emit('getUserList',redisUserList); 
             }
-            
         }
         else
         {
+            console.log("ekledim")
             const newUserList =[];
             const newUserWebTab = {
                 ...user,
@@ -60,21 +56,9 @@ io.on('connection', (socket) => {
         
         if(redisUserList.length==1)
         {
-            const userData = redisUserList.filter(x=>x.token ==user.token)[0];
-            if(userData.socketList.length==1)
-            {
-                redisService.removeKeyField("onlineuser",user.Id);
-                console.log("içinde");
-            }
-            else
-            {
-                  const socketData = userData.socketList.filter(x=>x==socket.id)[0];
-                  userData.socketList.splice(userData.socketList.indexOf(socketData));
-    
-                  const redisIndex= redisUserList.indexOf(userData);
-                  redisUserList[redisIndex]=userData;
-                  await redisService.setData("onlineuser",user.Id,redisUserList); 
-                  io.emit('getUserList',redisUserList);
+            if(redisUserList[0].socketList[0]==socket.id)
+            {  
+              redisService.removeKeyField("onlineuser",user.Id);
             }
         }
         else
@@ -82,20 +66,11 @@ io.on('connection', (socket) => {
             const userData = redisUserList.filter(x=>x.token ==user.token)[0];
             if(userData)
             {
-                if(userData.socketList.length==1)
-                {
+                if(userData.socketList[0]==socket.id)
+                {   
                     redisUserList.splice(redisUserList.indexOf(userData));
+                    await redisService.setData("onlineuser",user.Id,redisUserList); 
                     io.emit('getUserList',redisUserList);
-                }
-                else
-                {
-                  const socketData = userData.socketList.filter(x=>x==socket.id)[0];
-                  userData.socketList.splice(userData.socketList.indexOf(socketData));
-    
-                  const redisIndex= redisUserList.indexOf(userData);
-                  redisUserList[redisIndex]=userData;
-                  await redisService.setData("onlineuser",user.Id,redisUserList); 
-                  io.emit('getUserList',redisUserList);
                 }
             }
         }

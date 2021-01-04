@@ -13,6 +13,7 @@ import { SocketService } from 'src/Service/Socket.service';
 export class HomeComponent implements OnInit,OnDestroy {
 
   currentUser: User;
+  onlineUserCount:number=0;
   userList:User[];
   onlineUserList:User[];
   connectAccountCount:number=0;
@@ -30,8 +31,9 @@ export class HomeComponent implements OnInit,OnDestroy {
     this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);
     this.getUserlist();
     this.addOnlineUser();
+    this.getOnlineUserCount();  
     this.getOnlineUserList();
-    window.onbeforeunload = () => this.ngOnDestroy();
+    window.onbeforeunload = () => this.ngOnDestroy(); 
   }
 
   getUserlist()
@@ -52,6 +54,13 @@ export class HomeComponent implements OnInit,OnDestroy {
     this.socketService.getUserList().subscribe(data =>{
       console.log(data);
     })
+  }
+
+  getOnlineUserCount()
+  {
+    this.socketService.nonBlockUser().subscribe((data:any) =>{
+       this.router.navigate(['/multiConnectionError']);
+    });
   }
 
   removeOnlineUser()
