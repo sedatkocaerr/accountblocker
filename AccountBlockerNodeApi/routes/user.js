@@ -135,42 +135,41 @@ router.get('/getUserList', (req, res, next) => {
    const userList =[];  
    console.log("userId => ",req.params.user_id);
    redisClient.hget("onlineuser",req.params.user_id,(err,datalist)=>{
-     if(err)
+   if(err)
+   {
+     res.json({error:{message:"something went wrong."}});
+   }
+   const data = JSON.parse(datalist);
+   
+   if(data)
+   {
+     const filterData =  data.filter(x=>x.token==req.query.userToken)[0];
+     
+     if(filterData)
      {
-       res.json({error:{message:"something went wrong."}});
+       res.status(200).json({
+       status:true,
+       message:"Online User Listed.",
+       data:true,
+       totalOnlineCount:data});
      }
-     const data = JSON.parse(datalist);
-
-    
-    if(data)
-    {
-      const filterData = data.filter(x=>x.token==req.query.userToken)
-      if(filterData)
-      {
-        res.status(200).json({
-        status:true,
-        message:"Online User Listed.",
-        data:true,
-        totalOnlineCount:data});
-      }
-      else
-      {
-        res.status(200).json({
-          status:true,
-          message:"Online User Listed.",
-          data:false,
-          totalOnlineCount:data});
-      }
-    }
-    else
-    {
-        res.status(200).json({
-        status:true,
-        message:"Online User Listed.",
-        data:false,
-        totalOnlineCount:data});
-    }
-      
+     else
+     {
+       res.status(200).json({
+         status:true,
+         message:"Online User Listed.",
+         data:false,
+         totalOnlineCount:data});
+     }
+   }
+   else
+   {
+       res.status(200).json({
+       status:true,
+       message:"Online User Listed.",
+       data:false,
+       totalOnlineCount:data});
+   }
    });
  });
 

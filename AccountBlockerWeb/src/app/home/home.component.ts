@@ -50,13 +50,26 @@ export class HomeComponent implements OnInit {
           {
             this.router.navigate(['/multiAccountError']);
           }
+          else
+          {
+            this.startData();
+          }
         }
-        this.addedOnlineuser=true;
-        this.addOnlineUser();
-        this.getUserlist();
-        this.getOnlineUserList();
+        else
+        {
+          this.startData();
+        }
+        
       }
      });
+  }
+
+  startData()
+  {
+    this.addedOnlineuser=true;
+    this.addOnlineUser();
+    this.getUserlist();
+    this.getOnlineUserList();
   }
 
   getUserlist()
