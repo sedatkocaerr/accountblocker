@@ -53,13 +53,13 @@ public login(email: string, password: string): Observable<User> {
         retry(1));
  }
 
- public getOnlineUserCount(userId): Observable<User> {
+ public getOnlineUserCount(userId,token): Observable<User> {
   let httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json'
   })}
 
-  return this.httpClient.get<User>(this.apiUrl+"/user/getOnlineList/"+userId,
+  return this.httpClient.get<User>(this.apiUrl+"/user/getOnlineList/"+userId+"?userToken="+token,
     httpOptions)
       .pipe(
       retry(1));

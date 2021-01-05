@@ -15,35 +15,23 @@ server.listen(3001);
 io.on('connection', (socket) => {
     
     socket.broadcast.on("addNewUser", async user => {
-        
+           
         const redisUserList = await redisService.getData("onlineuser",user.Id);
         if(redisUserList)
         {
             const userData = redisUserList.filter(x=>x.token ==user.token)[0];
-            if(userData)
+            if(!userData)
             {
-                io.to(socket.id).emit('multiplyPageBlock');
-            }
-            else
-            {
-                const newUserWebTab = {
-                    ...user,
-                    socketList:[socket.id]
-                }
-                redisUserList.push(newUserWebTab);
+                redisUserList.push(user);
                 await redisService.setData("onlineuser",user.Id,redisUserList); 
                 io.emit('getUserList',redisUserList); 
             }
         }
         else
         {
-            console.log("ekledim")
+            console.log("ekledim");
             const newUserList =[];
-            const newUserWebTab = {
-                ...user,
-                socketList:[socket.id]
-            }
-            newUserList.push(newUserWebTab);
+            newUserList.push(user);
             await redisService.setData("onlineuser",user.Id,newUserList); 
             io.emit('getUserList',newUserList);   
         }
@@ -53,13 +41,10 @@ io.on('connection', (socket) => {
 
     socket.broadcast.on('removeUser', async user =>{
         const redisUserList = await redisService.getData("onlineuser",user.Id);
-        
         if(redisUserList.length==1)
         {
-            if(redisUserList[0].socketList[0]==socket.id)
-            {  
-              redisService.removeKeyField("onlineuser",user.Id);
-            }
+            console.log("sildim");
+          redisService.removeKeyField("onlineuser",user.Id);
         }
         else
         {
@@ -77,6 +62,6 @@ io.on('connection', (socket) => {
     });
     
     socket.on("disconnect", () =>  {
-        console.log("socket");
+        
     });
 });

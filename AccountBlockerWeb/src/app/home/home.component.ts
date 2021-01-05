@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit,HostListener } from '@angular/core';
 import { AuthenticationService } from 'src/Service/Authentication.service';
 import { User } from 'src/Model/user';
 import { Router } from '@angular/router';
@@ -10,9 +10,10 @@ import { SocketService } from 'src/Service/Socket.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit,OnDestroy {
+export class HomeComponent implements OnInit {
 
   currentUser: User;
+  addedOnlineuser:boolean;
   onlineUserCount:number=0;
   userList:User[];
   onlineUserList:User[];
@@ -23,17 +24,39 @@ export class HomeComponent implements OnInit,OnDestroy {
     private socketService:SocketService,
     private router: Router) { }
 
-  ngOnDestroy(): void {
-    this.removeOnlineUser();
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler() {
+    window.alert("Are you sure you want to close this page ?");
+    if(this.addedOnlineuser)
+    {
+      this.removeOnlineUser();
+    }
+    return false
   }
 
-  ngOnInit() {
+  ngOnInit()
+  {
     this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);
-    this.getUserlist();
-    this.addOnlineUser();
-    this.getOnlineUserCount();  
-    this.getOnlineUserList();
-    window.onbeforeunload = () => this.ngOnDestroy(); 
+    this.userService.getOnlineUserCount(this.currentUser.userId,window.localStorage.getItem('token')).subscribe((data:any) =>{
+      if(data.data)
+      {
+        this.router.navigate(['/multiConnectionError']);
+      }
+      else
+      {
+        if(data.totalOnlineCount)
+        {
+          if(data.totalOnlineCount.length+1>=3)
+          {
+            this.router.navigate(['/multiAccountError']);
+          }
+        }
+        this.addedOnlineuser=true;
+        this.addOnlineUser();
+        this.getUserlist();
+        this.getOnlineUserList();
+      }
+     });
   }
 
   getUserlist()
@@ -45,7 +68,12 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   addOnlineUser()
   {
-    const userData ={Id:this.authenticationService.currentUserValue.userId,name:this.authenticationService.currentUserValue.name,token:window.localStorage.getItem("token")}
+    const userData = {
+      Id:this.authenticationService.currentUserValue.userId,
+      name:this.authenticationService.currentUserValue.name,
+      token:window.localStorage.getItem("token"),
+      tabId:this.getTabId()}
+
     this.socketService.addNewUser(userData);
   }
 
@@ -56,13 +84,6 @@ export class HomeComponent implements OnInit,OnDestroy {
     })
   }
 
-  getOnlineUserCount()
-  {
-    this.socketService.nonBlockUser().subscribe((data:any) =>{
-       this.router.navigate(['/multiConnectionError']);
-    });
-  }
-
   removeOnlineUser()
   {
     const userData ={Id:this.authenticationService.currentUserValue.userId,name:this.authenticationService.currentUserValue.name,token:window.localStorage.getItem("token")}
@@ -71,8 +92,32 @@ export class HomeComponent implements OnInit,OnDestroy {
   
   logout()
   {
+    this.beforeunloadHandler();
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  getTabId():number
+  {
+    let lasttabid= localStorage.getItem("lastTabId");
+    let tabid= sessionStorage.getItem("tabId"); 
+    let lasttabidint: number;
+    console.log("lasttabid: "+lasttabid+" tabid: "+tabid);
+    if(tabid === undefined || tabid == null || tabid.length<=0 || !tabid){
+        if(lasttabid === undefined || lasttabid == null || lasttabid.length<=0 || !lasttabid){
+            sessionStorage.setItem("tabId", "1");
+            localStorage.setItem("lastTabId", "1");
+            tabid= "1";
+        } else {
+            lasttabidint= +lasttabid;
+            sessionStorage.setItem("tabId", String(++lasttabidint));
+            localStorage.setItem("lastTabId", String(lasttabidint));
+            tabid= String(lasttabidint);
+        }
+    }
+    console.log("actual tab id is : "+ tabid);
+    return Number(tabid);
+
   }
 
 }
