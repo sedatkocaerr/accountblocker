@@ -23,7 +23,6 @@ function getListData(keyName)
         redisClient.get(keyName,(err,datalist)=>{
            if(err)
            {
-               console.log(err.message);
                return null;
            }
            rtrList.push(JSON.parse(datalist));
@@ -43,7 +42,6 @@ async function getData(keyName,userId)
                 redisClient.hget(keyName,userId,(err,datalist)=>{
                 if(err)
                 {
-                    console.log(err.message);
                     return null;
                 }
                const data = JSON.parse(datalist);

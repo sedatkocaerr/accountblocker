@@ -24,6 +24,39 @@ export class HomeComponent implements OnInit {
     private socketService:SocketService,
     private router: Router) { }
 
+  ngOnInit()
+  {
+    this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);
+    this.userService.getOnlineUserCount(this.currentUser.userId,
+      window.localStorage.getItem('token')).subscribe((data:any) =>{
+        console.log(data);
+      if(data.respnseObject.data)
+      {
+        this.router.navigate(['/multiConnectionError']);
+      }
+      else
+      {
+        if(data.respnseObject.totalOnlineCount)
+        {
+          if(data.respnseObject.totalOnlineCount.length+1>=3)
+          {
+            this.router.navigate(['/multiAccountError']);
+          }
+          else
+          {
+            this.startOperation();
+          }
+        }
+        else
+        {
+          this.startOperation();
+        }
+        
+      }
+     });
+  }
+
+
   @HostListener('window:beforeunload', ['$event'])
   beforeunloadHandler() {
     window.alert("Are you sure you want to close this page ?");
@@ -31,40 +64,10 @@ export class HomeComponent implements OnInit {
     {
       this.removeOnlineUser();
     }
-    return false
+    return false;
   }
 
-  ngOnInit()
-  {
-    this.authenticationService.currentUser.subscribe(x=>this.currentUser=x);
-    this.userService.getOnlineUserCount(this.currentUser.userId,window.localStorage.getItem('token')).subscribe((data:any) =>{
-      if(data.data)
-      {
-        this.router.navigate(['/multiConnectionError']);
-      }
-      else
-      {
-        if(data.totalOnlineCount)
-        {
-          if(data.totalOnlineCount.length+1>=3)
-          {
-            this.router.navigate(['/multiAccountError']);
-          }
-          else
-          {
-            this.startData();
-          }
-        }
-        else
-        {
-          this.startData();
-        }
-        
-      }
-     });
-  }
-
-  startData()
+  startOperation()
   {
     this.addedOnlineuser=true;
     this.addOnlineUser();
@@ -81,11 +84,12 @@ export class HomeComponent implements OnInit {
 
   addOnlineUser()
   {
-    const userData = {
+    const userData =
+    {
       Id:this.authenticationService.currentUserValue.userId,
       name:this.authenticationService.currentUserValue.name,
-      token:window.localStorage.getItem("token"),
-      tabId:this.getTabId()}
+      token:window.localStorage.getItem("token")
+    }
 
     this.socketService.addNewUser(userData);
   }
@@ -99,7 +103,13 @@ export class HomeComponent implements OnInit {
 
   removeOnlineUser()
   {
-    const userData ={Id:this.authenticationService.currentUserValue.userId,name:this.authenticationService.currentUserValue.name,token:window.localStorage.getItem("token")}
+    const userData =
+    {
+      Id:this.authenticationService.currentUserValue.userId,
+      name:this.authenticationService.currentUserValue.name,
+      token:window.localStorage.getItem("token")
+    }
+
     this.socketService.removeUser(userData);
   }
   
@@ -109,28 +119,6 @@ export class HomeComponent implements OnInit {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
-
-  getTabId():number
-  {
-    let lasttabid= localStorage.getItem("lastTabId");
-    let tabid= sessionStorage.getItem("tabId"); 
-    let lasttabidint: number;
-    console.log("lasttabid: "+lasttabid+" tabid: "+tabid);
-    if(tabid === undefined || tabid == null || tabid.length<=0 || !tabid){
-        if(lasttabid === undefined || lasttabid == null || lasttabid.length<=0 || !lasttabid){
-            sessionStorage.setItem("tabId", "1");
-            localStorage.setItem("lastTabId", "1");
-            tabid= "1";
-        } else {
-            lasttabidint= +lasttabid;
-            sessionStorage.setItem("tabId", String(++lasttabidint));
-            localStorage.setItem("lastTabId", String(lasttabidint));
-            tabid= String(lasttabidint);
-        }
-    }
-    console.log("actual tab id is : "+ tabid);
-    return Number(tabid);
-
-  }
+  
 
 }

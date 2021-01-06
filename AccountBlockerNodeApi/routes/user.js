@@ -139,36 +139,33 @@ router.get('/getUserList', (req, res, next) => {
    {
      res.json({error:{message:"something went wrong."}});
    }
+
    const data = JSON.parse(datalist);
-   
    if(data)
    {
-     const filterData =  data.filter(x=>x.token==req.query.userToken)[0];
-     
+     const filterData = data.filter(x=>x.token==req.query.userToken)[0];
+     const respnseObject = {
+        status:true,
+        message:"Online User Listed.",
+        data:true,
+        totalOnlineCount:data
+     }
+
      if(filterData)
      {
-       res.status(200).json({
-       status:true,
-       message:"Online User Listed.",
-       data:true,
-       totalOnlineCount:data});
+       console.log(filterData);
+       res.status(200).json({respnseObject});
      }
      else
      {
-       res.status(200).json({
-         status:true,
-         message:"Online User Listed.",
-         data:false,
-         totalOnlineCount:data});
+       respnseObject.data = false;
+       res.status(200).json({respnseObject});
      }
    }
    else
    {
-       res.status(200).json({
-       status:true,
-       message:"Online User Listed.",
-       data:false,
-       totalOnlineCount:data});
+      respnseObject.data = false;
+      res.status(200).json({respnseObject});
    }
    });
  });

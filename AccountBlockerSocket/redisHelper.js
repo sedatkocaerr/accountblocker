@@ -10,6 +10,4 @@ redisClient.on('error',()=>{
     console.log('Redis is not Working !!!');
 });
 
-
-
 module.exports=redisClient;

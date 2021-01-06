@@ -16,7 +16,6 @@ io.on('connection', (socket) => {
     
     socket.broadcast.on("addNewUser", async user => {
            
-        console.log("ekledim");
         const redisUserList = await redisService.getData("onlineuser",user.Id);
         if(redisUserList)
         {
@@ -30,7 +29,6 @@ io.on('connection', (socket) => {
         }
         else
         {
-            
             const newUserList =[];
             newUserList.push(user);
             await redisService.setData("onlineuser",user.Id,newUserList); 
@@ -41,23 +39,17 @@ io.on('connection', (socket) => {
 
 
     socket.broadcast.on('removeUser', async user =>{
-        const redisUserList = await redisService.getData("onlineuser",user.Id);
-        console.log("sildim"+redisUserList.length);
-        if(redisUserList.length==1)
-        {
-          
-          redisService.removeKeyField("onlineuser",user.Id);
-        }
-        else
-        {
-            const userData = redisUserList.filter(x=>x.token ==user.token)[0];
-            if(userData)
-            {
-               redisUserList.splice(redisUserList.indexOf(userData));
-               await redisService.setData("onlineuser",user.Id,redisUserList); 
-               io.emit('getUserList',redisUserList);
-            }
-        }
+       const redisUserList = await redisService.getData("onlineuser",user.Id);
+       if(redisUserList)
+       {
+          const userData = redisUserList.filter(x=>x.token ==user.token)[0];
+          if(userData)
+          {
+             redisUserList.splice(redisUserList.indexOf(userData),1);
+             await redisService.setData("onlineuser",user.Id,redisUserList); 
+             io.emit('getUserList',redisUserList);
+          }
+       }
     });
     
     socket.on("disconnect", () =>  {

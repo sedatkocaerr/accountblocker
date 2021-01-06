@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   subscription: Subscription;
   currentUser: User;
 
-  constructor(private userService:UserService,
+  constructor(
+    private userService:UserService,
      private alertService:AlertService,
      private formBuilder: FormBuilder,
      private router: Router,
