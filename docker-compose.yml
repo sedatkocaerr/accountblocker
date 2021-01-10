@@ -1,0 +1,33 @@
+version: '3'
+services:
+  nodejs-api:
+    build:
+      context: ./AccountBlockerNodeApi
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: node-api
+    volumes:
+       - ./api:/usr/src/app/api
+       - /usr/src/app/api/node_modules
+       
+  nodejs-socket:
+    build:
+      context: ./api
+      dockerfile: Dockerfile-dev
+    ports:
+      - "3080:3080"
+    container_name: node-api
+    volumes:
+       - ./api:/usr/src/app/api
+       - /usr/src/app/api/node_modules     
+  angular-web:
+    build:
+      context: ./app-ui
+      dockerfile: Dockerfile-dev
+    ports:
+      - "4201:4201"
+    container_name: angular-ui
+    volumes:
+       - ./app-ui:/usr/src/app/app-ui
+       - /usr/src/app/app-ui/node_modules
