@@ -15,7 +15,7 @@ RUN npm install
 COPY . /var/www/app
 
 # Uygulamanın çalışacağı port
-EXPOSE 3001
+EXPOSE 3000
 
 # Projeyi ayağa kaldıracak komutu çalıştır
-CMD ["node", "socketApp.js"]  
+CMD ["nodemon", "app.js"]  

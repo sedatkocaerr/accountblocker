@@ -3,7 +3,7 @@ import { AuthenticationService } from 'src/Service/Authentication.service';
 import { User } from 'src/Model/user';
 import { Router } from '@angular/router';
 import { UserService } from 'src/Service/user.service';
-import { SocketService } from 'src/Service/Socket.service';
+import { SocketService } from '../../Service/socket.service';
 
 @Component({
   selector: 'app-home',

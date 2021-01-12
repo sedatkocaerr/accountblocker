@@ -4,6 +4,7 @@
   "description": "",
   "main": "socketApp.js",
   "scripts": {
+    "start": "node socketApp.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sedat kocaer",

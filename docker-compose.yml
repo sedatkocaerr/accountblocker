@@ -8,26 +8,39 @@ services:
       - "3000:3000"
     container_name: node-api
     volumes:
-       - ./api:/usr/src/app/api
-       - /usr/src/app/api/node_modules
+      - ./AccountBlockerNodeApi/:/var/www/app
+    links:
+      - mongogb 
+       
        
   nodejs-socket:
     build:
-      context: ./api
-      dockerfile: Dockerfile-dev
+      context: ./AccountBlockerSocket
+      dockerfile: Dockerfile
     ports:
-      - "3080:3080"
-    container_name: node-api
+      - "3001:3001"
+    container_name: node-socket
     volumes:
-       - ./api:/usr/src/app/api
-       - /usr/src/app/api/node_modules     
+      - ./AccountBlockerSocket/:/var/www/app
+        
+       
   angular-web:
     build:
-      context: ./app-ui
-      dockerfile: Dockerfile-dev
+      context: ./AccountBlockerWeb
+      dockerfile: Dockerfile
     ports:
-      - "4201:4201"
+      - "4200:4200"
     container_name: angular-ui
     volumes:
-       - ./app-ui:/usr/src/app/app-ui
-       - /usr/src/app/app-ui/node_modules
+      - ./AccountBlockerWeb/:/var/www/app
+    
+  mongogb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/AccountBlocker
+    
+
+volumes:
+  data:     
