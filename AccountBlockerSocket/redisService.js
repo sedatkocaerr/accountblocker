@@ -63,7 +63,7 @@ function removeKeyField(keyName,fieldName)
     }
     else
     {
-        console.log("Redis not connect.")
+        console.log("Redis not connect.");
     }
 }
 

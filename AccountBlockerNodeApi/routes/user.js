@@ -7,7 +7,7 @@ const tokenMiddleware = require('../middleware/tokenVerify');
 
 //Redis
 const redis = require('redis');
-const redisClient = redis.createClient(); //creates a new client
+const redisClient = redis.createClient(process.env.REDIS_URL); //creates a new client
 
 
 redisClient.on('connect',  () => {
@@ -69,7 +69,6 @@ router.post('/login', async (req, res, next) => {
           surname:data.surname,
           email:data.email};
 
-          console.log("token"+token);
         res.status(201).json({
           data:user,
           token:token,
@@ -91,7 +90,6 @@ router.post('/login', async (req, res, next) => {
 });
 
 
-// get email and password req.body before give the token and refresh token
 router.get('/getUser/:user_id',tokenMiddleware, (req, res, next) => {
     
   const user_id = req.params.user_id;
@@ -109,7 +107,6 @@ router.get('/getUser/:user_id',tokenMiddleware, (req, res, next) => {
 });
 
 
-// get email and password req.body before give the token and refresh token
 router.get('/getUserList', (req, res, next) => {
   const userList =[];  
   const userPromise = User.find({});
@@ -130,7 +127,6 @@ router.get('/getUserList', (req, res, next) => {
 
 
 
-// get email and password req.body before give the token and refresh token
  router.get('/getOnlineList/:user_id', (req, res, next) => {
    const userList =[];  
    console.log("userId => ",req.params.user_id);
@@ -141,19 +137,18 @@ router.get('/getUserList', (req, res, next) => {
    }
 
    const data = JSON.parse(datalist);
-   if(data)
-   {
-     const filterData = data.filter(x=>x.token==req.query.userToken)[0];
-     const respnseObject = {
+   
+   const respnseObject = {
         status:true,
         message:"Online User Listed.",
         data:true,
         totalOnlineCount:data
-     }
-
+    }
+   if(data)
+   {
+     const filterData = data.filter(x=>x.token==req.query.userToken)[0];
      if(filterData)
      {
-       console.log(filterData);
        res.status(200).json({respnseObject});
      }
      else

@@ -1,21 +1,18 @@
-FROM node:10-alpine 
-# Uygulamamızın bulunacağı klasörü oluştur
-RUN mkdir -p /var/www/app
+FROM node:14
 
-# Komutlarımızın çalıştırılacağı dizini seç
-WORKDIR /var/www/app
+# Create app directory
+WORKDIR /usr/src/app
 
-# package.json dosyamızı çalışma dizinine kopyala
-COPY package.json /var/www/app
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# Bağımlılıkları kur
 RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-# Tüm proje dosyalarını docker image'ına kopyala
-COPY . /var/www/app
+# Bundle app source
+COPY . .
 
-# Uygulamanın çalışacağı port
-EXPOSE 3001
-
-# Projeyi ayağa kaldıracak komutu çalıştır
-CMD ["node", "socketApp.js"]  
+CMD [ "node", "socketApp.js" ]

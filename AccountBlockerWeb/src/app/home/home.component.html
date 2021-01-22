@@ -32,12 +32,12 @@
           <h6 class="card-subtitle mb-2 text-muted">Maximum connection limit : 2</h6>
           <h6 class="card-subtitle mb-2 text-muted">Your currently connected accounts : {{connectAccountCount}}</h6>
           <div class="list-group">
-            <a *ngFor="let item of onlineUserList" style="width: 50%;" href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a *ngFor="let item of onlineUserList" style="width: 50%;" href="#" [ngClass]="(item.token === userToken)?'list-group-item list-group-item-action flex-column align-items-start active':'list-group-item list-group-item-action flex-column align-items-start'">
               <h5 class="mb-1">Connection Time :</h5><p class="mb-1"> {{item.connectionTime}}</p>
-              <h5 class="mb-1">Web Browser Name:</h5> <p class="mb-1"> {{item.userAgent}}</p>
               <h5 class="mb-1">İp Adress:</h5><p class="mb-1"> {{item.ipAdress}}</p>
             </a>
           </div>
+          <br>
         </div>
       </div>
     </div>

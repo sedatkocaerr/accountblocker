@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
     {
       this.router.navigate(['/']);
     }
-
     this.createRegisterForm();
   }
 
@@ -46,7 +45,6 @@ export class RegisterComponent implements OnInit {
     }
     
     this.user = Object.assign({}, this.registerForm.value);
-
     this.userService.register(this.user) .subscribe(
       (data:any) => {
          if(data.status)
@@ -58,7 +56,6 @@ export class RegisterComponent implements OnInit {
          else
          {
             this.alertService.error(data.message);
-           
          }
       },
       error => {

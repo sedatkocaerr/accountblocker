@@ -64,6 +64,11 @@ public login(email: string, password: string): Observable<User> {
       retry(1));
 }
 
+public async getUserIpAdress() {
+  
+   return await this.httpClient.get("http://api.ipify.org/?format=json").toPromise();
+}
+
  errorHandle(error)
  {
   return throwError(error);

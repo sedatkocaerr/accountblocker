@@ -18,11 +18,6 @@ export class AppComponent implements OnInit {
   title = 'AccountBlockerWeb';
 
   ngOnInit() {
-    if(this.authenticationService.currentUserValue)
-    {
-      console.log("asasas")
-    }
+    if(this.authenticationService.currentUserValue){}
   }
-
-   
 }

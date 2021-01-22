@@ -1,18 +1,23 @@
 version: '3'
+
 services:
+
   nodejs-api:
     build:
       context: ./AccountBlockerNodeApi
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+       - '3000:3000'
+    restart: always  
     container_name: node-api
+    environment:
+      - REDIS_URL=redis://cache
     volumes:
-      - ./AccountBlockerNodeApi/:/var/www/app
+      - ./AccountBlockerNodeApi/:/usr/src/app
     links:
-      - mongogb 
-       
-       
+      - mongodb 
+      - redis:redis  
+                    
   nodejs-socket:
     build:
       context: ./AccountBlockerSocket
@@ -20,10 +25,13 @@ services:
     ports:
       - "3001:3001"
     container_name: node-socket
+    environment:
+       - REDIS_URL=redis://cache
     volumes:
-      - ./AccountBlockerSocket/:/var/www/app
-        
-       
+      - ./AccountBlockerSocket/:/usr/src/app
+    links:  
+      - redis:redis
+              
   angular-web:
     build:
       context: ./AccountBlockerWeb
@@ -32,15 +40,21 @@ services:
       - "4200:4200"
     container_name: angular-ui
     volumes:
-      - ./AccountBlockerWeb/:/var/www/app
+      - ./AccountBlockerWeb/:/app
     
-  mongogb:
+  mongodb:
+    container_name: mongodb
     image: mongo:latest
     ports:
       - 27017:27017
     volumes:
-      - data:/data/AccountBlocker
-    
+      - data:/data/db  
 
+  redis:
+    image: redis
+    container_name: cache
+    expose:
+      - 6379  
+    
 volumes:
-  data:     
+  data:   
